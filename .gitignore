@@ -1,0 +1,40 @@
+# Secrets
+.env
+.claude/settings.local.json
+
+# Runtime data
+data/
+logs/
+
+# Personal config — copy from *.example.json and fill in your own details
+apps/zuko/config/candidate_profile.json
+apps/zuko/config/approved_answers.json
+
+# Personal memory and business context — not for public consumption
+memory/
+
+# Playwright session artifacts
+.playwright-cli/
+
+# Scratch/working files at root
+tasks/
+*.pdf
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+
+# OS
+.DS_Store
+Thumbs.db

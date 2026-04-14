@@ -1,0 +1,167 @@
+<svg width="1600" height="1100" viewBox="0 0 1600 1100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Roderick Agent Ecosystem</title>
+  <desc id="desc">A dark glossy system map showing Roderick as the control plane, connected to specialist agents, local Qwen models, dashboard, Telegram, SQLite, Forge artifacts, and GitHub Actions.</desc>
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="20%" r="75%">
+      <stop offset="0%" stop-color="#123a28"/>
+      <stop offset="42%" stop-color="#06130d"/>
+      <stop offset="100%" stop-color="#020403"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#17231d" stop-opacity="0.92"/>
+      <stop offset="55%" stop-color="#0b120f" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#050806" stop-opacity="0.94"/>
+    </linearGradient>
+    <linearGradient id="greenLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1f6d46" stop-opacity="0.65"/>
+      <stop offset="50%" stop-color="#5dff9f" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#1f6d46" stop-opacity="0.65"/>
+    </linearGradient>
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.20 0 0 0 0 1.00 0 0 0 0 0.55 0 0 0 0.55 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <style>
+      .title { font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 54px; font-weight: 800; fill: #effff4; letter-spacing: 0.5px; }
+      .subtitle { font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 22px; fill: #9fb8aa; }
+      .label { font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 30px; font-weight: 780; fill: #effff4; }
+      .small { font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 18px; fill: #9fb8aa; }
+      .tiny { font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 15px; fill: #789184; }
+      .agent { fill: url(#panel); stroke: rgba(93,255,159,0.42); stroke-width: 1.6; filter: url(#shadow); }
+      .core { fill: #07130d; stroke: #5dff9f; stroke-width: 2.6; filter: url(#softGlow); }
+      .line { stroke: url(#greenLine); stroke-width: 3; fill: none; opacity: 0.9; }
+      .line2 { stroke: #2dd4bf; stroke-width: 2; fill: none; opacity: 0.58; stroke-dasharray: 9 9; }
+      .pill { fill: rgba(93,255,159,0.10); stroke: rgba(93,255,159,0.34); stroke-width: 1; }
+      .pillText { font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #5dff9f; }
+      .section { font-family: Inter, Segoe UI, Arial, sans-serif; font-size: 16px; font-weight: 800; fill: #5dff9f; text-transform: uppercase; letter-spacing: 2px; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1100" fill="url(#bgGlow)"/>
+  <circle cx="1210" cy="120" r="320" fill="#5dff9f" opacity="0.06"/>
+  <circle cx="220" cy="920" r="300" fill="#2dd4bf" opacity="0.05"/>
+  <path d="M80 1020 C420 930 660 1130 1040 990 S1390 880 1530 950" stroke="#5dff9f" opacity="0.12" stroke-width="2" fill="none"/>
+
+  <text x="90" y="95" class="title">Roderick Agent Ecosystem</text>
+  <text x="94" y="132" class="subtitle">Local AI control plane for research, building, learning, validation, job search, and opportunity discovery</text>
+
+  <!-- External interfaces -->
+  <rect x="90" y="210" width="270" height="112" rx="18" class="agent"/>
+  <text x="120" y="256" class="label">You</text>
+  <text x="120" y="288" class="small">Phone, PC, approvals</text>
+
+  <rect x="90" y="380" width="270" height="122" rx="18" class="agent"/>
+  <text x="120" y="426" class="label">Dashboard</text>
+  <text x="120" y="458" class="small">Control room</text>
+  <text x="120" y="482" class="tiny">localhost:3000</text>
+
+  <rect x="90" y="560" width="270" height="122" rx="18" class="agent"/>
+  <text x="120" y="606" class="label">Telegram</text>
+  <text x="120" y="638" class="small">Roderick + Atlas chats</text>
+  <text x="120" y="662" class="tiny">quick approvals and alerts</text>
+
+  <!-- Core -->
+  <circle cx="800" cy="500" r="145" class="core"/>
+  <text x="716" y="480" class="label">Roderick</text>
+  <text x="690" y="515" class="small">Truthful control plane</text>
+  <text x="714" y="542" class="tiny">routes, approves, audits</text>
+
+  <rect x="660" y="695" width="280" height="118" rx="20" class="agent"/>
+  <text x="710" y="742" class="label">FastAPI</text>
+  <text x="700" y="775" class="small">state and dashboard API</text>
+  <text x="724" y="800" class="tiny">localhost:8000</text>
+
+  <rect x="662" y="885" width="276" height="118" rx="20" class="agent"/>
+  <text x="718" y="932" class="label">SQLite</text>
+  <text x="703" y="965" class="small">tasks, approvals, events</text>
+  <text x="718" y="990" class="tiny">data/roderick.db</text>
+
+  <!-- Agents -->
+  <rect x="505" y="185" width="260" height="118" rx="20" class="agent"/>
+  <text x="548" y="232" class="label">Merlin</text>
+  <text x="535" y="265" class="small">Research brain</text>
+  <text x="540" y="290" class="tiny">qwen3:30b</text>
+
+  <rect x="835" y="185" width="260" height="118" rx="20" class="agent"/>
+  <text x="882" y="232" class="label">Venture</text>
+  <text x="876" y="265" class="small">Opportunity scout</text>
+  <text x="887" y="290" class="tiny">qwen3:30b</text>
+
+  <rect x="1105" y="370" width="310" height="135" rx="20" class="agent"/>
+  <text x="1190" y="418" class="label">Forge</text>
+  <text x="1140" y="452" class="small">Builds after approval</text>
+  <text x="1138" y="478" class="tiny">planner: qwen3:30b</text>
+  <text x="1138" y="500" class="tiny">coder: qwen2.5-coder:14b</text>
+
+  <rect x="1105" y="570" width="310" height="126" rx="20" class="agent"/>
+  <text x="1175" y="617" class="label">Sentinel</text>
+  <text x="1147" y="650" class="small">Validation + security guard</text>
+  <text x="1168" y="676" class="tiny">qwen2.5-coder:14b</text>
+
+  <rect x="505" y="690" width="260" height="122" rx="20" class="agent"/>
+  <text x="574" y="737" class="label">Atlas</text>
+  <text x="540" y="770" class="small">Learning coach</text>
+  <text x="559" y="795" class="tiny">qwen3:14b</text>
+
+  <rect x="835" y="690" width="260" height="122" rx="20" class="agent"/>
+  <text x="901" y="737" class="label">Zuko</text>
+  <text x="874" y="770" class="small">Job-market agent</text>
+  <text x="889" y="795" class="tiny">qwen3:14b</text>
+
+  <!-- Storage / CI -->
+  <rect x="1145" y="820" width="330" height="100" rx="18" class="agent"/>
+  <text x="1188" y="862" class="label">Forge Artifacts</text>
+  <text x="1190" y="894" class="small">plans, files, validation notes</text>
+
+  <rect x="1132" y="960" width="356" height="96" rx="18" class="agent"/>
+  <text x="1170" y="1000" class="label">GitHub Actions</text>
+  <text x="1195" y="1032" class="small">Sentinel Gate CI</text>
+
+  <rect x="485" y="960" width="300" height="96" rx="18" class="agent"/>
+  <text x="545" y="1000" class="label">Ollama</text>
+  <text x="528" y="1032" class="small">Qwen models on S:\AI</text>
+
+  <!-- Lines -->
+  <path d="M360 266 C520 266 570 390 665 445" class="line"/>
+  <path d="M360 441 C500 450 565 475 655 492" class="line"/>
+  <path d="M360 621 C500 590 565 545 655 518" class="line"/>
+
+  <path d="M720 375 C685 320 675 305 650 303" class="line"/>
+  <path d="M875 375 C915 320 935 305 963 303" class="line"/>
+  <path d="M940 470 C1015 450 1050 430 1105 425" class="line"/>
+  <path d="M945 548 C1030 585 1060 620 1105 630" class="line"/>
+  <path d="M704 610 C660 650 640 670 630 690" class="line"/>
+  <path d="M895 610 C930 655 950 675 965 690" class="line"/>
+
+  <path d="M800 645 C800 665 800 680 800 695" class="line"/>
+  <path d="M800 813 C800 842 800 865 800 885" class="line"/>
+  <path d="M1095 440 C1160 505 1205 535 1260 570" class="line2"/>
+  <path d="M1260 696 C1280 748 1295 785 1310 820" class="line2"/>
+  <path d="M1310 920 C1310 935 1310 948 1310 960" class="line2"/>
+  <path d="M1132 1008 C1005 1015 900 1015 785 1010" class="line2"/>
+
+  <path d="M635 303 C615 420 610 560 635 690" class="line2"/>
+  <path d="M965 303 C978 425 980 555 965 690" class="line2"/>
+  <path d="M965 690 C1010 638 1060 610 1105 602" class="line2"/>
+  <path d="M1105 465 C1010 520 955 580 895 690" class="line2"/>
+
+  <!-- Legend -->
+  <rect x="90" y="805" width="360" height="210" rx="22" class="agent"/>
+  <text x="120" y="852" class="section">How to read it</text>
+  <rect x="120" y="880" width="28" height="12" rx="6" fill="url(#greenLine)"/>
+  <text x="165" y="894" class="small">Primary control/data path</text>
+  <line x1="120" y1="930" x2="150" y2="930" class="line2"/>
+  <text x="165" y="936" class="small">Feedback and validation loop</text>
+  <rect x="120" y="965" width="116" height="30" rx="15" class="pill"/>
+  <text x="138" y="986" class="pillText">Local-first</text>
+  <text x="250" y="986" class="tiny">runs on your PC</text>
+
+  <text x="90" y="1060" class="tiny">Private repo: malikaperera/telegram-claude-agent | Dashboard: localhost:3000 | API: localhost:8000</text>
+</svg>

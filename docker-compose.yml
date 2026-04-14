@@ -1,0 +1,142 @@
+services:
+
+  # ── Core ──────────────────────────────────────────────────────────────────
+  roderick:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.roderick
+    container_name: roderick
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - roderick_db:/app/db
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./memory:/app/memory
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "${DEVOPS_WORKSPACE:-./workspace}:/devops"
+    environment:
+      - DEVOPS_ROOT=/devops
+      - DATA_DIR=/app/data
+      - DB_DIR=/app/db
+      - DB_SEED_PATH=/app/data/roderick.db
+      - LLM_PROVIDER=${LLM_PROVIDER:-ollama}
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://host.docker.internal:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen3:14b}
+      - LANGFUSE_HOST=http://langfuse:3000
+    group_add:
+      - "999"
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: roderick-api
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - roderick_db:/app/db
+      - ./data:/app/data
+      - ./memory:/app/memory
+    environment:
+      - DATA_DIR=/app/data
+      - DB_DIR=/app/db
+      - DB_SEED_PATH=/app/data/roderick.db
+      - MEMORY_DIR=/app/memory
+      - GITHUB_REPOSITORY=${GITHUB_REPOSITORY:-yourusername/multi-agent-ai-platform}
+      - GITHUB_REPOSITORY_URL=${GITHUB_REPOSITORY_URL:-https://github.com/yourusername/multi-agent-ai-platform}
+      - GITHUB_DEFAULT_BRANCH=main
+      - GITHUB_ACTIONS_WORKFLOW=Sentinel Gate
+    ports:
+      - "8000:8000"
+    depends_on:
+      - roderick
+
+  zuko:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.zuko
+    container_name: zuko
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - roderick_db:/app/db
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./memory:/app/memory
+      - "${CV_DIR:-./cv}:/cv:ro"
+    environment:
+      - DATA_DIR=/app/data
+      - DB_DIR=/app/db
+      - DB_SEED_PATH=/app/data/roderick.db
+      - MEMORY_DIR=/app/memory
+      - LLM_PROVIDER=${LLM_PROVIDER:-ollama}
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://host.docker.internal:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen3:14b}
+      - OPENCLAW_HOST=http://openclaw:18789
+      - OPENCLAW_TOKEN=${OPENCLAW_TOKEN:-roderick-openclaw-secret}
+      - ZUKO_CV_PATH=${ZUKO_CV_PATH:-/cv/your_cv.pdf}
+    depends_on:
+      - roderick
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dashboard
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    container_name: roderick-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  # ── Observability ─────────────────────────────────────────────────────────
+  langfuse:
+    image: langfuse/langfuse:2
+    container_name: langfuse
+    restart: unless-stopped
+    depends_on:
+      - langfuse-db
+    ports:
+      - "3001:3000"
+    environment:
+      - DATABASE_URL=postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      - NEXTAUTH_URL=http://localhost:3001
+      - NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET:-roderick-langfuse-secret}
+      - SALT=${LANGFUSE_SALT:-roderick-langfuse-salt}
+      - ENCRYPTION_KEY=${LANGFUSE_ENCRYPTION_KEY:-0000000000000000000000000000000000000000000000000000000000000000}
+      - TELEMETRY_ENABLED=false
+      - LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES=false
+
+  langfuse-db:
+    image: postgres:15-alpine
+    container_name: langfuse-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=langfuse
+      - POSTGRES_PASSWORD=langfuse
+      - POSTGRES_DB=langfuse
+    volumes:
+      - langfuse_db:/var/lib/postgresql/data
+
+  # ── OpenClaw ─────────────────────────────────────────────────────────────────
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "18789:18789"
+    volumes:
+      - openclaw_data:/app/data
+      - "${CV_DIR:-./cv}:/cv:ro"
+    environment:
+      - OPENCLAW_TOKEN=${OPENCLAW_TOKEN:-roderick-openclaw-secret}
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen3:14b}
+
+volumes:
+  roderick_db:
+  langfuse_db:
+  openclaw_data:

@@ -1,0 +1,137 @@
+{
+    "agents": [
+        {
+            "name": "merlin",
+            "display_name": "Merlin",
+            "purpose": "Technical research agent — investigates tools, architectures, GitHub repos, and feasibility of ideas",
+            "autonomy_level": "supervised",
+            "model_used": "qwen3:30b",
+            "research_model": "qwen3:30b",
+            "diagnostic_model": "qwen3:4b",
+            "task_types_accepted": [
+                "research"
+            ],
+            "report_types_produced": [
+                "research_report",
+                "learning_opportunity"
+            ],
+            "status": "idle",
+            "config": {}
+        },
+        {
+            "name": "venture",
+            "display_name": "Venture",
+            "purpose": "Strategic execution-intelligence agent — researches execution paths, market gaps, route-to-cash, and pricing for the decided ventures: configured business ventures and automation offers",
+            "autonomy_level": "supervised",
+            "model_used": "qwen3:30b",
+            "deep_model": "qwen3:30b",
+            "routine_model": "qwen3:14b",
+            "task_types_accepted": [
+                "opportunity_research"
+            ],
+            "report_types_produced": [
+                "opportunity_report"
+            ],
+            "status": "idle",
+            "config": {}
+        },
+        {
+            "name": "forge",
+            "display_name": "Forge",
+            "purpose": "Builder agent — implements system improvements autonomously. Plans and executes code changes, config updates, and infrastructure improvements without requiring user approval for system_improvement tasks.",
+            "autonomy_level": "autonomous",
+            "model_used": "qwen3:30b",
+            "planner_model": "qwen3:30b",
+            "coder_model": "qwen2.5-coder:14b",
+            "task_types_accepted": [
+                "build",
+                "build_feature",
+                "system_improvement"
+            ],
+            "report_types_produced": [
+                "implementation_plan",
+                "build_report"
+            ],
+            "status": "idle",
+            "config": {}
+        },
+        {
+            "name": "atlas",
+            "display_name": "Atlas",
+            "purpose": "Personalised skill tutor — builds a curriculum from real system work, tracks skill progression, prepares the owner for interviews and certifications in their chosen domain",
+            "autonomy_level": "supervised",
+            "model_used": "qwen3:14b",
+            "task_types_accepted": [
+                "skill_lesson",
+                "skill_assessment",
+                "curriculum_update"
+            ],
+            "report_types_produced": [
+                "lesson",
+                "curriculum_update",
+                "skill_gap_report"
+            ],
+            "status": "idle",
+            "config": {}
+        },
+        {
+            "name": "sentinel",
+            "display_name": "Sentinel",
+            "purpose": "Testing and validation agent — validates Forge builds before promotion to live; generates test scaffolds; reports health",
+            "autonomy_level": "supervised",
+            "model_used": "qwen2.5-coder:14b",
+            "task_types_accepted": [
+                "validate_build",
+                "health_check"
+            ],
+            "report_types_produced": [
+                "validation_report",
+                "health_report"
+            ],
+            "status": "idle",
+            "config": {}
+        },
+        {
+            "name": "zuko",
+            "display_name": "Zuko",
+            "purpose": "Job search agent — monitors listings, manages applications, reports progress to Roderick",
+            "autonomy_level": "autonomous",
+            "model_used": "qwen3:14b",
+            "task_types_accepted": [
+                "job_search",
+                "application_prep"
+            ],
+            "report_types_produced": [
+                "job_report",
+                "application_status"
+            ],
+            "status": "unknown",
+            "config": {}
+        },
+        {
+            "name": "operator",
+            "display_name": "Operator",
+            "purpose": "Business execution agent — manages approved initiatives, sequences action steps, coordinates Forge/Merlin/Sentinel/Venture for the configured ventures. Owns concrete business ops follow-through downstream of Venture strategy.",
+            "autonomy_level": "supervised",
+            "model_used": "qwen3:14b",
+            "task_types_accepted": [
+                "initiative_execution",
+                "business_ops",
+                "launch_checklist",
+                "vendor_setup",
+                "outreach_preparation",
+                "decision_brief",
+                "execution_followup",
+                "cashflow_action",
+                "milestone_review"
+            ],
+            "report_types_produced": [
+                "execution_report",
+                "initiative_update",
+                "decision_brief"
+            ],
+            "status": "idle",
+            "config": {}
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+  "What is your expected salary?": "Competitive with market rate — happy to discuss",
+  "Are you legally allowed to work in [country]?": "Yes",
+  "Do you require visa sponsorship?": "No",
+  "Are you willing to relocate?": "No",
+  "When can you start?": "2-4 weeks notice",
+  "Do you have experience with Kubernetes?": "Yes — production cluster management, Helm deployments, and observability setup",
+  "Do you have experience with Terraform?": "Yes — used for cloud infrastructure provisioning across AWS and GCP"
+}

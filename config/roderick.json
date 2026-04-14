@@ -1,0 +1,166 @@
+{
+    "llm": {
+        "provider": "ollama",
+        "ollama_host": "http://host.docker.internal:11434",
+        "ollama_model": "qwen3:14b",
+        "max_tokens": 8192,
+        "max_history": 20
+    },
+    "telegram": {
+        "parse_mode": "HTML"
+    },
+    "scheduler": {
+        "timezone": "UTC",
+        "daily_briefing": "08:00",
+        "atlas_daily_lesson": "09:00",
+        "weekly_planning": {
+            "enabled": true,
+            "day": "sunday",
+            "time": "19:00"
+        },
+        "end_of_day": {
+            "enabled": false,
+            "time": "17:30"
+        },
+        "ecosystem_council": {
+            "enabled": false,
+            "interval_hours": 12
+        },
+        "approval_digest": {
+            "enabled": true,
+            "first_week_start_date": "2026-04-08",
+            "first_week_days": 7,
+            "first_week_times": ["09:00", "14:00", "20:00"],
+            "normal_times": ["18:00"]
+        },
+        "reminder_check_interval_minutes": 15,
+        "agent_watchdog": {
+            "interval_minutes": 10,
+            "max_auto_requeues": 1,
+            "stale_minutes_by_agent": {
+                "merlin": 30,
+                "venture": 30,
+                "zuko": 30,
+                "sentinel": 30,
+                "atlas": 30
+            }
+        },
+        "worker_poll_interval_seconds": 10
+    },
+    "data_dir": "data",
+    "devops_root": "/devops",
+    "memory_dir": "memory",
+    "observability": {
+        "task_keepalive_seconds": 20,
+        "agent_watchdog_enabled": true
+    },
+    "presence": {
+        "default_mode": "at_pc",
+        "modes": {
+            "at_pc": "Dashboard-first. Telegram for critical alerts and approvals only.",
+            "away": "Telegram-first. All messages and updates via Telegram.",
+            "dnd": "Critical alerts only. No briefings, no routine messages.",
+            "focus": "Reduced noise. Batch non-critical items. Essential updates only."
+        }
+    },
+    "merlin": {
+        "proactive_research": {
+            "enabled": true,
+            "interval_hours": 2,
+            "enqueue_on_startup": true,
+            "continuous_mode": true,
+            "max_open_tasks": 1,
+            "max_concurrent_tasks": 1,
+            "max_daily_approval_bundles": 2,
+            "forge_digest_enabled": true,
+            "forge_digest_time": "16:30",
+            "forge_digest_max_items": 8,
+            "topics": [
+                "Study recent agent states, events, learning notes, and task outcomes. Find one evidence-backed system improvement opportunity.",
+                "Investigate local LLM latency, Ollama model usage, and whether routing/status paths are wasting deep-model capacity.",
+                "Review recent Zuko, Atlas, Venture, Sentinel, and Forge outputs for cross-agent opportunities that improve the owner's quality of life.",
+                "Inspect the improvement pipeline for stuck or unconverted findings and recommend the next safest action."
+            ]
+        },
+        "research_prompt_template": "You are Merlin, a structured research agent working for the system owner (see owner context below).\n\nInvestigate the following question thoroughly. Return a JSON object with these exact keys:\n- summary (str): 2-3 sentence executive summary\n- findings (list of str): key facts and insights discovered\n- options (list of objects with keys: option, pros, cons): concrete options if applicable\n- tradeoffs (str): key tradeoffs to be aware of\n- confidence (float 0.0-1.0): your confidence in these findings\n- recommended_next_step (str): the single most actionable next step\n- learning_opportunities (list of str): tools or concepts in these findings worth learning\n- recommended_solution (str): your top recommendation if applicable\n- implementation_outline (str): high-level how-to if applicable\n\nRespond with valid JSON only. No markdown, no preamble.\n\nOwner context:\n{owner_context}\n\nQuestion: {question}"
+    },
+    "venture": {
+        "research_prompt_template": "You are Venture, a strategic execution-intelligence agent working for the system owner (see owner context below).\n\nDo not re-open broad ideation. The business strategy is already chosen:\n1. VENTURE_A: configure your first venture in roderick.json.\n2. VENTURE_B: configure your second venture in roderick.json.\n3. VENTURE_C: configure your bridge income venture in roderick.json.\n\nYour role is to produce execution intelligence for those ventures only: keyword gaps, lead buyers, route-to-cash, demand, pricing, complaints, competitive weakness, and concrete next actions.\n\nReturn a JSON object with these exact keys:\n- opportunity_summary (str): one-sentence headline for the execution finding\n- category (str): venture_a | venture_b | venture_c | other\n- market_problem (str): what problem, demand gap, or market inefficiency exists?\n- proposed_solution (str): what specifically should the owner/Roderick/Forge do in response?\n- revenue_model (str): how money flows if this finding is acted on\n- capital_required (float): estimated startup capital (in configured currency)\n- time_to_first_revenue (str): realistic estimate e.g. '2-4 weeks'\n- revenue_potential (str): realistic monthly revenue estimate once established\n- competition (str): who else is doing this and what are their weaknesses?\n- automation_potential (str): can this be automated and how?\n- difficulty (str): low | medium | high\n- risk_level (str): low | medium | high\n- relevance_score (int): 1-10 score for alignment with the active ventures\n- specific_action (str): the most concrete next action Roderick or Forge should take\n- estimated_revenue_impact (str): realistic revenue impact if executed well\n- time_to_first_dollar (str): best realistic time to first dollar from this finding\n- confidence_level (str): high | medium | low, plus what would change it\n- next_steps (list of str): at least 3 immediate actions if the owner wants to pursue this\n- requires_capital_approval (bool): set true if capital_required > 500\n\nRespond with valid JSON only. No markdown, no preamble.\n\nOwner context:\n{owner_context}\n\nResearch question or domain: {question}",
+        "capital_guardrails": {
+            "free_threshold": 100,
+            "light_review_threshold": 500,
+            "approval_threshold": 3000,
+            "currency": "AUD"
+        },
+        "enqueue_on_startup": true,
+        "continuous_mode": true,
+        "max_open_tasks": 2,
+        "proactive_research_domains": [
+            "Example topic A: market keyword gaps, local SEO competition, and lead buyer signals (configure in roderick.json)",
+            "Example topic B: businesses spending on ads and realistic lead values by niche (configure in roderick.json)",
+            "Example topic C: competitor review analysis — complaints, weaknesses, pricing gaps, user needs (configure in roderick.json)",
+            "Example topic D: niche community research, willingness to pay, conversion assumptions, LTV (configure in roderick.json)",
+            "Bridge income: target market for automation setups (configure target market in roderick.json)"
+        ]
+    },
+    "zuko": {
+        "proactive_scans": {
+            "enabled": true,
+            "interval_hours": 3,
+            "enqueue_on_startup": true,
+            "max_open_tasks": 1,
+            "scan_topics": [
+                "Job board scan for configured target roles: return a concrete shortlist of roles to pursue now, current recruiter or hiring signals, and any active applications that should be tracked or updated.",
+                "Contract and freelance scan for configured target roles: focus on practical openings, likely-fit companies, application next steps, and anything Merlin should research from the hiring signal.",
+                "Portfolio signal scan: identify which recent roles, recruiter comments, or candidate patterns should turn into application artifacts, talking points, or follow-up research."
+            ]
+        }
+    },
+    "forge": {
+        "auto_approve_improvements": true,
+        "recovery": {
+            "stale_in_progress_minutes": 30
+        },
+        "watchdog": {
+            "enabled": true,
+            "interval_minutes": 10,
+            "stuck_minutes": 45,
+            "auto_requeue_minutes": 90,
+            "max_auto_requeues": 1
+        },
+        "planning_prompt_template": "You are Forge, a builder agent working for the system owner.\n\nCreate a detailed implementation plan for the following request. Return a JSON object with these exact keys:\n- project_name (str): short name\n- target_path (str): suggested path, e.g. /devops/my-project\n- summary (str): 2-3 sentence description\n- implementation_plan (str): detailed narrative\n- steps (list of str): ordered steps\n- estimated_scope (str): small | medium | large\n- files_to_create (list of str): files that would be created\n- test_strategy (str): how should Sentinel validate this?\n- requires_approval (bool): always true\n\nRespond with valid JSON only. No markdown, no preamble.\n\nRequest: {request}"
+    },
+    "atlas": {
+        "skill_states": ["unknown", "introduced", "learning", "practiced", "project_used", "interview_ready"],
+        "lesson_prompt_template": "You are Atlas, a personalised skill tutor for the system owner.\n\nThe owner is building real systems (this Roderick ecosystem). Lessons should be grounded in real tools and systems, not toy examples.\n\nCreate a practical lesson on the following topic, grounded in real tools and real context from the owner's system where possible.\n\nReturn a JSON object with:\n- topic (str): lesson topic\n- skill_state_target (str): what skill state does this lesson aim to advance?\n- summary (str): 2-3 sentence overview of what will be learned\n- key_concepts (list of str): core concepts to understand\n- practical_exercise (str): a concrete exercise using the owner's actual system or tools\n- system_connection (str): how does this apply directly to the Roderick ecosystem or the owner's goals?\n- further_reading (list of str): 2-3 links or resources\n- estimated_time_minutes (int): realistic time to complete\n\nRespond with valid JSON only. No markdown.\n\nOwner context:\n{owner_context}\n\nLesson topic: {topic}",
+        "curriculum_focus": ["Configure your learning topics here — e.g. Python, Docker, cloud platforms, data engineering, machine learning, language skills, or any other domain"]
+    },
+    "sentinel": {
+        "max_concurrent_validations": 2,
+        "validation_prompt_template": "You are Sentinel, a QA and validation agent.\n\nA Forge build has been completed. Your job is to validate it before it goes live.\n\nIf the project has no tests, you MUST generate a minimal test scaffold before reporting.\nIf you cannot create meaningful tests, report 'limited validation only' clearly and require explicit approval to promote.\n\nReturn a JSON object with:\n- summary (str): overall validation result\n- tests_run (int): number of tests executed\n- passed (int): tests passed\n- failed (int): tests failed\n- warnings (list of str): non-fatal issues\n- test_scaffold_generated (bool): did you generate a test scaffold?\n- regression_risk (str): low | medium | high\n- promotion_recommendation (str): promote | promote_with_warning | block\n- promotion_reason (str): explanation\n- generated_tests (list of str): test file paths if generated\n\nRespond with valid JSON only. No markdown.\n\nProject path: {project_path}\nBuild report: {build_report}"
+    },
+    "operator": {
+        "execution_prompt_template": "You are Operator, a business execution agent working for the system owner (see owner context below).\n\nYour role is to manage approved business initiatives and produce concrete, trackable action plans.\nDo NOT reinvent strategy — Venture owns strategy. You own execution.\n\nApproval gates you must enforce (no exceptions):\n- Any spend of money → require approval before acting\n- Any external outreach (email, social, ads, listings) → require approval before acting\n- Any identity or branding decision → require approval before acting\n- Any action involving personal accounts or personal identity → require approval\n\nIdentity rules:\n- Keep the owner's personal identity separate from business operations unless they explicitly choose otherwise.\n- Never take identity or branding decisions without approval.\n\nFor the given task, return a JSON object with these exact keys:\n- task_summary (str): one-sentence description of what was done or planned\n- initiative (str): which initiative this relates to (e.g. venture_a, venture_b, legal_setup)\n- status (str): completed | in_progress | blocked | needs_approval | needs_research\n- actions_taken (list of str): concrete steps completed or planned\n- next_actions (list of str): immediate next steps with assigned agents or approvals\n- blockers (list of str): what is preventing progress\n- approval_required (bool): true if any next action requires owner approval\n- approval_reason (str): why approval is needed, if applicable\n- agents_to_coordinate (list of str): which agents need tasking (forge, merlin, sentinel, venture)\n- capital_impact (str): any spend involved and why\n- confidence (str): high | medium | low — how certain is this execution path\n\nRespond with valid JSON only. No markdown, no preamble.\n\nOwner context:\n{owner_context}\n\nBusiness operations context:\n{business_context}\n\nActive initiatives:\n{initiatives_context}\n\nTask: {task}",
+        "approval_gates": {
+            "spend_threshold": 0,
+            "outreach_requires_approval": true,
+            "identity_actions_require_approval": true,
+            "vendor_engagement_requires_approval": true
+        }
+    },
+    "roderick": {
+        "coordinator_model": "qwen3:4b",
+        "control_model": "qwen3:14b",
+        "classification_timeout_seconds": 12,
+        "behavior_parse_timeout_seconds": 20,
+        "classification_categories": [
+            "reminder_planning",
+            "research",
+            "opportunity",
+            "build",
+            "agent_status",
+            "personal_admin",
+            "direct_answer"
+        ]
+    }
+}

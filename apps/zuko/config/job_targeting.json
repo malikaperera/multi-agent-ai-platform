@@ -1,0 +1,145 @@
+{
+  "target_location": "Your City",
+  "target_roles": [
+    "DevOps Engineer",
+    "Platform Engineer",
+    "DataOps Engineer",
+    "Site Reliability Engineer",
+    "Pipeline Engineer",
+    "Automation Engineer",
+    "Platform Support Engineer",
+    "Devops Support Engineer",
+    "Infrastructure Support Engineer",
+    "Infrastructure Engineer",
+    "Cloud Engineer",
+    "Production Support Engineer",
+    "Application Support Engineer",
+    "Systems Engineer",
+    "Operations Engineer",
+    "Cloud Support Engineer",
+    "Cloud Operations Engineer",
+    "SRE Engineer",
+    "Cloud Systems Engineer",
+    "Systems Administrator",
+    "Cloud Systems Administrator",
+    "Technical Analyst",
+    "Release Engineer",
+    "Mid-Level DevOps Engineer"
+  ],
+
+  "scoring": {
+    "high_fit_keywords": {
+      "weight": 3,
+      "terms": [
+        "devops",
+        "platform engineer",
+        "automation",
+        "python",
+        "pipeline",
+        "dataops",
+        "workload",
+        "sre",
+        "site reliability",
+        "platform",
+        "infrastructure as code"
+      ]
+    },
+    "medium_fit_keywords": {
+      "weight": 1,
+      "terms": [
+        "linux",
+        "azure",
+        "aws",
+        "gcp",
+        "docker",
+        "ci/cd",
+        "scripting",
+        "sql",
+        "batch",
+        "orchestration",
+        "cloud",
+        "reliability",
+        "kubernetes",
+        "k8s",
+        "terraform",
+        "ansible",
+        "jenkins",
+        "support",
+        "monitoring",
+        "observability",
+        "systems engineer",
+        "cloud engineer",
+        "infrastructure engineer",
+        "release engineer",
+        "operations engineer",
+        "technical analyst",
+        "systems administrator",
+        "deployment",
+        "helm",
+        "github actions",
+        "gitlab"
+      ]
+    },
+    "low_fit_keywords": {
+      "weight": 0.5,
+      "terms": [
+        "operations",
+        "infrastructure",
+        "engineer",
+        "technical"
+      ]
+    },
+    "penalty_keywords": {
+      "weight": -5,
+      "terms": [
+        "junior",
+        "graduate",
+        "trainee",
+        "intern",
+        "marketing",
+        "sales",
+        "hr",
+        "recruitment",
+        "data scientist",
+        "machine learning",
+        "frontend",
+        "react",
+        "angular"
+      ]
+    },
+    "fit_thresholds": {
+      "high": 6,
+      "medium": 3,
+      "low": 1,
+      "skip_below": 1
+    }
+  },
+
+  "cover_letter_strategy": {
+    "high_fit": "full_tailored",
+    "medium_fit": "short_tailored",
+    "low_fit": "skip"
+  },
+
+  "jobs_per_scan": 5,
+  "scan_interval_hours": 2,
+
+  "max_applications_per_day": 15,
+
+  "excluded_companies": [],
+
+  "excluded_keywords_in_title": [
+    "senior",
+    "lead",
+    "principal",
+    "architect",
+    "staff",
+    "manager",
+    "director",
+    "head of",
+    "vp",
+    "chief",
+    "vice president",
+    "general manager"
+  ]
+}

@@ -1,0 +1,148 @@
+name: Sentinel Gate
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      approval_id:
+        description: "Roderick approval id, if this run is tied to a dashboard/Telegram approval"
+        required: false
+        type: string
+      forge_task_id:
+        description: "Forge task id, if this run validates a Forge change"
+        required: false
+        type: string
+      reason:
+        description: "Why this gate is being run"
+        required: false
+        default: "Manual Sentinel gate"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sentinel-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sentinel-gate:
+    name: Sentinel sanity checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Explain approval context
+        run: |
+          echo "Reason: ${{ inputs.reason || 'push/pull request gate' }}"
+          echo "Approval id: ${{ inputs.approval_id || 'not provided' }}"
+          echo "Forge task id: ${{ inputs.forge_task_id || 'not provided' }}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python compile gate
+        run: python -m compileall apps shared
+
+      - name: JSON/config sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          paths = [
+              Path("config/agents.json"),
+              Path("config/roderick.json"),
+              Path("dashboard/package.json"),
+          ]
+          for path in paths:
+              json.loads(path.read_text(encoding="utf-8"))
+              print(f"ok: {path}")
+          PY
+
+      - name: Secret hygiene gate
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          skip_dirs = {".git", ".venv", "venv", "data", "logs", "node_modules", ".next"}
+          allow_files = {".env.example", ".github/workflows/sentinel-gate.yml"}
+          patterns = [
+              re.compile(r"gho_[A-Za-z0-9_]{20,}"),
+              re.compile(r"sk-[A-Za-z0-9]{32,}"),
+              re.compile(r"-----BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY-----"),
+          ]
+          secret_names = {
+              "TELEGRAM_BOT_TOKEN",
+              "ATLAS_TELEGRAM_BOT_TOKEN",
+              "ANTHROPIC_API_KEY",
+              "LANGFUSE_SECRET_KEY",
+          }
+          allowed_prefixes = ("", "your_", "placeholder", "pk-lf-", "sk-lf-", "os.environ", "os.getenv")
+          findings = []
+          for path in Path(".").rglob("*"):
+              if not path.is_file():
+                  continue
+              if any(part in skip_dirs for part in path.parts):
+                  continue
+              path_key = path.as_posix().lstrip("./")
+              if path.name in allow_files or path_key in allow_files:
+                  continue
+              try:
+                  text = path.read_text(encoding="utf-8", errors="ignore")
+              except Exception:
+                  continue
+              for pattern in patterns:
+                  if pattern.search(text):
+                      findings.append(str(path))
+                      break
+              for line in text.splitlines():
+                  if "=" not in line:
+                      continue
+                  key, value = line.split("=", 1)
+                  if key.strip() in secret_names and not value.strip().startswith(allowed_prefixes):
+                      findings.append(str(path))
+                      break
+          if findings:
+              print("Potential secret findings:")
+              for item in findings:
+                  print(f"- {item}")
+              raise SystemExit(1)
+          print("No obvious secrets found.")
+          PY
+
+      - name: Docker Compose config gate
+        run: |
+          cat > .env <<'EOF'
+          TELEGRAM_BOT_TOKEN=placeholder
+          AUTHORIZED_CHAT_ID=0
+          LLM_PROVIDER=ollama
+          OLLAMA_HOST=http://host.docker.internal:11434
+          OLLAMA_MODEL=qwen3:14b
+          ATLAS_TELEGRAM_BOT_TOKEN=placeholder
+          ATLAS_TELEGRAM_CHAT_ID=0
+          LANGFUSE_NEXTAUTH_SECRET=placeholder
+          LANGFUSE_SALT=placeholder
+          LANGFUSE_ENCRYPTION_KEY=0000000000000000000000000000000000000000000000000000000000000000
+          EOF
+          docker compose config --quiet
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Dashboard build gate
+        working-directory: dashboard
+        run: |
+          npm install
+          npm run build
